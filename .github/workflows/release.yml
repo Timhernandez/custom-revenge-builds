@@ -90,6 +90,10 @@ jobs:
           PACKAGE=$(grep '^Package:' control | cut -d ' ' -f 2)
           VERSION=$(grep '^Version:' control | cut -d ' ' -f 2)
           echo "APP_NAME=Revenge" >> $GITHUB_ENV
+          REVENGE_SIZE=$(stat -f%z "Revenge.ipa")
+          REVENGE_NOTRACK_SIZE=$(stat -f%z "Revenge-discordnotrack.ipa")
+          echo "REVENGE_SIZE=$REVENGE_SIZE" >> $GITHUB_ENV
+          echo "REVENGE_NOTRACK_SIZE=$REVENGE_NOTRACK_SIZE" >> $GITHUB_ENV
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -132,6 +136,7 @@ jobs:
                 "downloadURL": "https://github.com/${{ github.repository }}/releases/download/v${{ env.DISCORD_VERSION }}/Revenge.ipa",
                 "localizedDescription": "Discord with Revenge injected",
                 "iconURL": "https://avatars.githubusercontent.com/u/159218871?s=200&v=4"
+                "size": ${{ env.REVENGE_SIZE }}
               },
               {
                 "name": "Revenge NoTrack",
@@ -142,6 +147,7 @@ jobs:
                 "downloadURL": "https://github.com/${{ github.repository }}/releases/download/v${{ env.DISCORD_VERSION }}/Revenge-discordnotrack.ipa",
                 "localizedDescription": "Discord with Revenge and NoTrack injected",
                 "iconURL": "https://avatars.githubusercontent.com/u/159218871?s=200&v=4"
+                "size": ${{ env.REVENGE_NOTRACK_SIZE }}
               }
             ],
             "news": [
