@@ -102,7 +102,7 @@ jobs:
 
       - name: Extract Discord Version
         run: |
-          unzip -q ${{ env.APP_NAME }}.ipa
+          unzip -q Revenge.ipa
           DISCORD_VERSION=$(plutil -p Payload/Discord.app/Info.plist | grep CFBundleShortVersionString | cut -d '"' -f 4)
           echo "DISCORD_VERSION=$DISCORD_VERSION" >> $GITHUB_ENV
 
@@ -111,8 +111,8 @@ jobs:
         with:
           tag_name: v${{ env.DISCORD_VERSION }}
           files: |
-            ${{ env.APP_NAME }}.ipa
-            ${{ env.APP_NAME }}-discordnotrack.ipa
+            Revenge.ipa
+            Revenge-discordnotrack.ipa
           generate_release_notes: true
           fail_on_unmatched_files: true
           token: ${{ env.GITHUB_TOKEN }}
