@@ -1,7 +1,7 @@
 {
   "name": "Cris' Custom Revenge Builds",
   "identifier": "com.cris.revengebuilds",
-  "sourceURL": "https://raw.githubusercontent.com/Cristiandis/custom-revenge-builds/tree/main/repo.json",
+  "sourceURL": "https://raw.githubusercontent.com/Cristiandis/custom-revenge-builds/main/repo.json",
   "apps": [
     {
       "name": "Revenge",
