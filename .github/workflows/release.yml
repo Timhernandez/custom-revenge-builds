@@ -90,10 +90,6 @@ jobs:
           PACKAGE=$(grep '^Package:' control | cut -d ' ' -f 2)
           VERSION=$(grep '^Version:' control | cut -d ' ' -f 2)
           echo "APP_NAME=Revenge" >> $GITHUB_ENV
-          REVENGE_SIZE=$(stat -f%z "Revenge.ipa")
-          REVENGE_NOTRACK_SIZE=$(stat -f%z "Revenge-discordnotrack.ipa")
-          echo "REVENGE_SIZE=$REVENGE_SIZE" >> $GITHUB_ENV
-          echo "REVENGE_NOTRACK_SIZE=$REVENGE_NOTRACK_SIZE" >> $GITHUB_ENV
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -105,6 +101,10 @@ jobs:
           unzip -q Revenge.ipa
           DISCORD_VERSION=$(plutil -p Payload/Discord.app/Info.plist | grep CFBundleShortVersionString | cut -d '"' -f 4)
           echo "DISCORD_VERSION=$DISCORD_VERSION" >> $GITHUB_ENV
+          REVENGE_SIZE=$(stat -f%z "Revenge.ipa")
+          REVENGE_NOTRACK_SIZE=$(stat -f%z "Revenge-discordnotrack.ipa")
+          echo "REVENGE_SIZE=$REVENGE_SIZE" >> $GITHUB_ENV
+          echo "REVENGE_NOTRACK_SIZE=$REVENGE_NOTRACK_SIZE" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
