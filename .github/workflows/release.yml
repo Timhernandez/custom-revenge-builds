@@ -125,7 +125,7 @@ jobs:
           {
             "name": "Cris' Custom Revenge Builds",
             "identifier": "com.cris.revengebuilds",
-            "sourceURL": "https://raw.githubusercontent.com/${{ github.repository }}/tree/Custom-Builds/repo.json",
+            "sourceURL": "https://raw.githubusercontent.com/${{ github.repository }}/tree/main/repo.json",
             "apps": [
               {
                 "name": "Revenge",
