@@ -45,10 +45,9 @@ jobs:
 
       - name: Extract Values
         run: |
-          NAME=$(grep '^Name:' control | cut -d ' ' -f 2)
           PACKAGE=$(grep '^Package:' control | cut -d ' ' -f 2)
           VERSION=$(grep '^Version:' control | cut -d ' ' -f 2)
-          echo "APP_NAME=$NAME" >> $GITHUB_ENV
+          echo "APP_NAME=Revenge" >> $GITHUB_ENV
 
       - name: Install cyan
         run: pip install --force-reinstall https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip Pillow
