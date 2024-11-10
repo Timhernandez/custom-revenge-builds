@@ -13,98 +13,17 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-  build-tweak:
-    runs-on: macos-14
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-
-      - name: Download Tweak
-        run: |
-          set +e
-
-          release_info=$(gh api --header 'Accept: application/vnd.github+json' repos/${{ github.repository }}/releases/latest)
-          status_code=$(echo $release_info | jq -r ".status")
-
-          if [ "$status_code" != "null" ]; then
-            echo "No releases found or request failed, status code: $status_code"
-            echo "DEB_DOWNLOADED=false" >> $GITHUB_ENV
-            exit 0
-          fi
-
-          set -e
-
-          release_version=$(echo "$release_info" | jq -r '.assets[] | select(.name | contains("iphoneos-arm.deb")) | .name' | grep -o '_[0-9.]\+_' | tr -d '_')
-          control_version=$(grep '^Version:' control | cut -d ' ' -f 2)
-
-          if [ "$release_version" = "$control_version" ]; then
-            echo "Versions match. Downloading DEB files..."
-            echo "$release_info" | jq -r '.assets[] | select(.name | endswith(".deb")) | .browser_download_url' | xargs -I {} curl -L -O {}
-            echo "DEB_DOWNLOADED=true" >> $GITHUB_ENV
-          else
-            echo "Versions do not match. No files will be downloaded."
-            echo "DEB_DOWNLOADED=false" >> $GITHUB_ENV
-            exit 0
-          fi
-
-      - name: Check cache
-        if: env.DEB_DOWNLOADED == 'false'
-        run: echo upstream_heads=`git ls-remote https://github.com/theos/theos | head -n 1 | cut -f 1`-`git ls-remote https://github.com/theos/sdks | head -n 1 | cut -f 1` >> $GITHUB_ENV
-
-      - name: Use cache
-        if: env.DEB_DOWNLOADED == 'false'
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/theos
-          key: ${{ runner.os }}-${{ env.upstream_heads }}
-
-      - name: Prepare Theos
-        if: env.DEB_DOWNLOADED == 'false'
-        uses: Randomblock1/theos-action@v1
-
-      - name: Build packages
-        if: env.DEB_DOWNLOADED == 'false'
-        run: make package FINALPACKAGE=1 && make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-
-      - name: Set DEB path
-        run: |
-          if [ "${{ env.DEB_DOWNLOADED }}" == "true" ]; then
-            echo "DEB_PATH=${{ github.workspace }}/*-arm.deb" >> $GITHUB_ENV
-            echo "ROOTLESS_DEB_PATH=${{ github.workspace }}/*-arm64.deb" >> $GITHUB_ENV
-          else
-            echo "DEB_PATH=${{ github.workspace }}/packages/*-arm.deb" >> $GITHUB_ENV
-            echo "ROOTLESS_DEB_PATH=${{ github.workspace }}/packages/*-arm64.deb" >> $GITHUB_ENV
-          fi
-
-      - name: Upload package
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: ${{ env.DEB_PATH }}
-
-      - name: Upload rootless package
-        uses: actions/upload-artifact@v4
-        with:
-          name: rootless package
-          path: ${{ env.ROOTLESS_DEB_PATH }}
-
   build-ipa:
     runs-on: macos-14
-    needs: build-tweak
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          merge-multiple: true
-
+      - name: Download Revenge Tweak
+        run: |
+          wget https://github.com/revenge-mod/revenge-tweak/releases/latest/download/io.github.revenge-mod.app_1.0.0_iphoneos-arm.deb
+      
       - name: Download Discord IPA
         run: |
           curl -L -o discord.ipa ${{ github.event.inputs.ipa_url }}
@@ -129,10 +48,6 @@ jobs:
           NAME=$(grep '^Name:' control | cut -d ' ' -f 2)
           PACKAGE=$(grep '^Package:' control | cut -d ' ' -f 2)
           VERSION=$(grep '^Version:' control | cut -d ' ' -f 2)
-          DEB_FILE_NAME="${PACKAGE}_${VERSION}_iphoneos-arm.deb"
-          echo "DEB_FILE_NAME=$DEB_FILE_NAME" >> $GITHUB_ENV
-          ROOTLESS_DEB_FILE_NAME="${PACKAGE}_${VERSION}_iphoneos-arm64.deb"
-          echo "ROOTLESS_DEB_FILE_NAME=$ROOTLESS_DEB_FILE_NAME" >> $GITHUB_ENV
           echo "APP_NAME=$NAME" >> $GITHUB_ENV
 
       - name: Install cyan
@@ -140,14 +55,14 @@ jobs:
 
       - name: Inject tweak - Normal Revenge
         run: |
-          cyan -n ${{ env.APP_NAME }} -k PyoncordIcon60x60@2x.png -d -i Payload/Discord.app -o ${{ github.workspace }}/${{ env.APP_NAME }}.ipa -f ${{ github.workspace }}/${{ env.DEB_FILE_NAME }} -usg
+          cyan -n ${{ env.APP_NAME }} -k PyoncordIcon60x60@2x.png -d -i Payload/Discord.app -o ${{ github.workspace }}/${{ env.APP_NAME }}.ipa -f ${{ github.workspace }}/io.github.revenge-mod.app_1.0.0_iphoneos-arm.deb -usg
 
       - name: Download DiscordNoTrack
         run: wget https://github.com/asdfzxcvbn/DiscordNoTrack/releases/latest/download/DiscordNoTrack.dylib
 
       - name: Inject tweak - Revenge + DiscordNoTrack
         run: |
-          cyan -n ${{ env.APP_NAME }} -k PyoncordIcon60x60@2x.png -d -i Payload/Discord.app -o ${{ github.workspace }}/${{ env.APP_NAME }}-discordnotrack.ipa -f ${{ github.workspace }}/${{ env.DEB_FILE_NAME }} ${{ github.workspace }}/DiscordNoTrack.dylib -usg
+          cyan -n ${{ env.APP_NAME }} -k PyoncordIcon60x60@2x.png -d -i Payload/Discord.app -o ${{ github.workspace }}/${{ env.APP_NAME }}-discordnotrack.ipa -f ${{ github.workspace }}/io.github.revenge-mod.app_1.0.0_iphoneos-arm.deb ${{ github.workspace }}/DiscordNoTrack.dylib -usg
 
       - name: Upload ipa as artifact
         uses: actions/upload-artifact@v4
