@@ -22,7 +22,7 @@ jobs:
 
       - name: Download Revenge Tweak
         run: |
-          wget https://github.com/revenge-mod/revenge-tweak/releases/latest/download/io.github.revenge-mod.app_1.0.0_iphoneos-arm.deb
+          wget https://github.com/revenge-mod/revenge-tweak/releases/latest/download/io.github.revenge-mod.app_2.0.1_iphoneos-arm.deb
       
       - name: Download Discord IPA
         run: |
