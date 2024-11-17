@@ -7,31 +7,31 @@
       "name": "Revenge",
       "bundleIdentifier": "com.hammerandchisel.discord",
       "developerName": "Cristiandis",
-      "version": "254.0",
-      "versionDate": "2024-11-13T16:27:27Z",
-      "downloadURL": "https://github.com/Cristiandis/custom-revenge-builds/releases/download/v254.0/Revenge.ipa",
+      "version": "253.0",
+      "versionDate": "2024-11-10T14:39:28Z",
+      "downloadURL": "https://github.com/Cristiandis/custom-revenge-builds/releases/download/v253.0/Revenge.ipa",
       "localizedDescription": "Discord with Revenge injected",
       "iconURL": "https://avatars.githubusercontent.com/u/159218871?s=200&v=4",
-      "size": 93947126
+      "size": 95227818
     },
     {
       "name": "Revenge NoTrack",
       "bundleIdentifier": "com.hammerandchisel.discord",
       "developerName": "Cristiandis",
-      "version": "254.0",
-      "versionDate": "2024-11-13T16:27:27Z",
-      "downloadURL": "https://github.com/Cristiandis/custom-revenge-builds/releases/download/v254.0/Revenge-discordnotrack.ipa",
+      "version": "253.0",
+      "versionDate": "2024-11-10T14:39:28Z",
+      "downloadURL": "https://github.com/Cristiandis/custom-revenge-builds/releases/download/v253.0/Revenge-discordnotrack.ipa",
       "localizedDescription": "Discord with Revenge and NoTrack injected",
       "iconURL": "https://avatars.githubusercontent.com/u/159218871?s=200&v=4",
-      "size": 93952444
+      "size": 95232956
     }
   ],
   "news": [
     {
       "title": "Revenge Updated",
-      "identifier": "revenge-release-254.0",
+      "identifier": "revenge-release-253.0",
       "caption": "New Discord Version with Revenge",
-      "date": "2024-11-13T16:27:27Z",
+      "date": "2024-11-10T14:39:28Z",
       "tintColor": "#ae3238"
     }
   ]
